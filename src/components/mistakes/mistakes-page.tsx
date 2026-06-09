@@ -22,83 +22,83 @@ import {
 interface MistakeData {
   id: string
   question: string
-  科目: string
+  subject: string
   topic: string
-  次错误Count: number
-  total次尝试: number
+  wrongCount: number
+  totalAttempts: number
   lastMistake: string
-  正确率Rate: number
+  correctRate: number
 }
 
 const mockMistakes: MistakeData[] = [
   {
     id: "m1",
     question: "Which of the following is the most common cause of acute pancreatitis?",
-    科目: "病理学",
+    subject: "病理学",
     topic: "消化系统",
-    次错误Count: 3,
-    total次尝试: 5,
+    wrongCount: 3,
+    totalAttempts: 5,
     lastMistake: "2 hours ago",
-    正确率Rate: 40,
+    correctRate: 40,
   },
   {
     id: "m2",
     question: "What is the mechanism of action of ACE inhibitors?",
-    科目: "药理学",
+    subject: "药理学",
     topic: "心血管系统",
-    次错误Count: 2,
-    total次尝试: 4,
+    wrongCount: 2,
+    totalAttempts: 4,
     lastMistake: "Yesterday",
-    正确率Rate: 50,
+    correctRate: 50,
   },
   {
     id: "m3",
     question: "Describe the pathophysiology of diabetic ketoacidosis",
-    科目: "内分泌学",
+    subject: "内分泌学",
     topic: "糖尿病",
-    次错误Count: 4,
-    total次尝试: 6,
+    wrongCount: 4,
+    totalAttempts: 6,
     lastMistake: "3 days ago",
-    正确率Rate: 33,
+    correctRate: 33,
   },
   {
     id: "m4",
     question: "ST-elevation in leads V1-V4 indicates which type of MI?",
-    科目: "心脏病学",
+    subject: "心脏病学",
     topic: "缺血性心脏病",
-    次错误Count: 1,
-    total次尝试: 3,
+    wrongCount: 1,
+    totalAttempts: 3,
     lastMistake: "1 week ago",
-    正确率Rate: 67,
+    correctRate: 67,
   },
   {
     id: "m5",
     question: "Which antibiotic is contraindicated in children under 8 years?",
-    科目: "药理学",
+    subject: "药理学",
     topic: "抗生素",
-    次错误Count: 2,
-    total次尝试: 2,
+    wrongCount: 2,
+    totalAttempts: 2,
     lastMistake: "1 week ago",
-    正确率Rate: 0,
+    correctRate: 0,
   },
 ]
 
 export function MistakesPage() {
-  const [filter科目, setFilter科目] = useState("全部")
+  const [filterSubject, setFilterSubject] = useState("全部")
   const [sortBy, setSortBy] = useState<"count" | "rate">("count")
   const [searchQuery, setSearchQuery] = useState("")
 
   const filteredMistakes = mockMistakes
-    .filter((m) => filter科目 === "全部" || m.科目 === filter科目)
+    .filter((m) => filterSubject === "全部" || m.subject === filterSubject)
     .filter((m) => m.question.toLowerCase().includes(searchQuery.toLowerCase()))
     .sort((a, b) =>
       sortBy === "count"
-        ? b.次错误Count - a.次错误Count
-        : a.正确率Rate - b.正确率Rate
+        ? b.wrongCount - a.wrongCount
+        : a.correctRate - b.correctRate
     )
 
-  const 科目s = [...new Set(mockMistakes.map((m) => m.科目))]
-  const totalMistakes = mockMistakes.reduce((sum, m) => sum + m.次错误Count, 0)
+  const subjects = [...new Set(mockMistakes.map((m) => m.subject))]
+  const totalMistakes = mockMistakes.reduce((sum, m) => sum + m.wrongCount, 0)
 
   return (
     <div className="space-y-6">
@@ -163,13 +163,13 @@ export function MistakesPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-        <Select value={filter科目} onValueChange={setFilter科目}>
+        <Select value={filterSubject} onValueChange={setFilterSubject}>
           <SelectTrigger className="w-36 h-9">
             <SelectValue placeholder="科目" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="全部">全部 科目s</SelectItem>
-            {科目s.map((s) => (
+            <SelectItem value="全部">全部 subjects</SelectItem>
+            {subjects.map((s) => (
               <SelectItem key={s} value={s}>{s}</SelectItem>
             ))}
           </SelectContent>
@@ -194,7 +194,7 @@ export function MistakesPage() {
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <Badge variant="secondary" className="text-xs">
-                      {mistake.科目}
+                      {mistake.subject}
                     </Badge>
                     <Badge variant="outline" className="text-xs">
                       {mistake.topic}
@@ -209,21 +209,21 @@ export function MistakesPage() {
                   <div className="flex items-center gap-4 mt-2">
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <XCircle className="h-3 w-3 text-red-500" />
-                      <span>{mistake.次错误Count}x 次错误</span>
+                      <span>{mistake.wrongCount}x 次错误</span>
                     </div>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
                       <Eye className="h-3 w-3" />
-                      <span>{mistake.total次尝试} 次尝试</span>
+                      <span>{mistake.totalAttempts} 次尝试</span>
                     </div>
                   </div>
                 </div>
                 <div className="flex flex-col items-end gap-2 shrink-0">
                   <div className="text-right">
-                    <p className="text-sm font-bold">{mistake.正确率Rate}%</p>
+                    <p className="text-sm font-bold">{mistake.correctRate}%</p>
                     <p className="text-xs text-muted-foreground">正确率</p>
                   </div>
                   <Progress
-                    value={mistake.正确率Rate}
+                    value={mistake.correctRate}
                     className="h-1.5 w-20"
                   />
                   <Button size="sm" variant="outline" className="h-8 text-xs gap-1">

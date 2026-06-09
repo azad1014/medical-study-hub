@@ -28,9 +28,9 @@ interface Message {
 }
 
 const suggestionPrompts = [
-  { icon: BookOpen, label: "解释", prompt: "解释 the pathophysiology of nephrotic syndrome" },
-  { icon: Beaker, label: "对比", prompt: "对比 and contrast ACE inhibitors and ARBs" },
-  { icon: Brain, label: "总结", prompt: "总结 the acute inflammatory response" },
+  { icon: BookOpen, label: "解释", prompt: "解释肾病综合征的病理生理学" },
+  { icon: Beaker, label: "对比", prompt: "对比 ACEI 和 ARB 的异同" },
+  { icon: Brain, label: "总结", prompt: "总结急性炎症反应" },
   { icon: StickyNote, label: "记忆口诀", prompt: "帮我记忆脑神经" },
   { icon: Lightbulb, label: "生成练习", prompt: "生成5道关于糖尿病的练习题" },
 ]

@@ -21,7 +21,7 @@ import Link from "next/link"
 // Mock data for demonstration
 const stats = [
   {
-    label: "Due 张卡片",
+    label: "待复习卡片",
     value: "24",
     icon: GraduationCap,
     color: "text-blue-600",

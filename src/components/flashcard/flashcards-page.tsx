@@ -39,7 +39,7 @@ const mockCards: FlashcardData[] = [
     back: "Rubor (redness), Calor (heat), Tumor (swelling), Dolor (pain), Functio laesa (loss of function)",
     subject: "病理学",
     difficulty: 2,
-    tags: ["炎症", "病理学-basics"],
+    tags: ["炎症", "病理学基础"],
     easeFactor: 2.5,
     interval: 0,
     repetitions: 0,

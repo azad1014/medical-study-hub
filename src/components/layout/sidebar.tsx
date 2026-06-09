@@ -10,34 +10,34 @@ import {
   FileQuestion,
   AlertTriangle,
   Bot,
-  Sparkles,
   LogOut,
   ChevronLeft,
   ChevronRight,
-  Settings,
+  Sparkles,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { useState } from "react"
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/knowledge-base", label: "Knowledge Base", icon: BookOpen },
-  { href: "/flashcards", label: "Flashcards", icon: GraduationCap },
-  { href: "/questions", label: "Question Bank", icon: FileQuestion },
-  { href: "/mistakes", label: "Mistake Notebook", icon: AlertTriangle },
-  { href: "/ai-tutor", label: "AI Tutor", icon: Bot },
+  { href: "/", label: "工作台", icon: LayoutDashboard },
+  { href: "/knowledge-base", label: "知识库", icon: BookOpen },
+  { href: "/flashcards", label: "闪卡", icon: GraduationCap },
+  { href: "/questions", label: "题库", icon: FileQuestion },
+  { href: "/mistakes", label: "错题本", icon: AlertTriangle },
+  { href: "/generate", label: "资料生成", icon: Sparkles },
+  { href: "/ai-tutor", label: "AI 导师", icon: Bot },
 ]
 
 export function Sidebar() {
   const pathname = usePathname()
-  const [收起d, set收起d] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
 
   return (
     <aside
       className={cn(
         "flex flex-col border-r bg-card transition-all duration-300",
-        收起d ? "w-16" : "w-60"
+        collapsed ? "w-16" : "w-60"
       )}
     >
       {/* Logo */}
@@ -45,7 +45,7 @@ export function Sidebar() {
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-medical-500 text-white font-bold text-sm">
           MS
         </div>
-        {!收起d && (
+        {!collapsed && (
           <span className="font-semibold text-sm">医学学习中心</span>
         )}
       </div>
@@ -69,7 +69,7 @@ export function Sidebar() {
               )}
             >
               <Icon className="h-5 w-5 shrink-0" />
-              {!收起d && <span>{item.label}</span>}
+              {!collapsed && <span>{item.label}</span>}
             </Link>
           )
         })}
@@ -83,9 +83,9 @@ export function Sidebar() {
           variant="ghost"
           size="sm"
           className="w-full justify-start gap-3 text-muted-foreground"
-          onClick={() => set收起d(!收起d)}
+          onClick={() => setCollapsed(!collapsed)}
         >
-          {收起d ? (
+          {collapsed ? (
             <ChevronRight className="h-5 w-5 shrink-0" />
           ) : (
             <>
@@ -100,7 +100,7 @@ export function Sidebar() {
           className="w-full justify-start gap-3 text-muted-foreground"
         >
           <LogOut className="h-5 w-5 shrink-0" />
-          {!收起d && <span>退出登录</span>}
+          {!collapsed && <span>退出登录</span>}
         </Button>
       </div>
     </aside>
