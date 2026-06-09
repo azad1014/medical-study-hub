@@ -29,11 +29,13 @@ export async function POST(req: NextRequest) {
     })
 
     return NextResponse.json({
-      response: completion.choices[0]?.message?.content || "I apologize, I could not generate a response.",
+      response: completion.choices[0]?.message?.content || "抱歉，无法生成回复。",
     })
-  } catch {
+  } catch (error) {
+    console.error("AI API Error:", error)
+    const message = error instanceof Error ? error.message : String(error)
     return NextResponse.json({
-      response: "AI tutor is currently unavailable. Please check your API key and try again.",
+      response: "AI 暂时不可用，错误信息：" + message,
     })
   }
 }
