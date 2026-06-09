@@ -10,7 +10,7 @@ const openai = new OpenAI({
 
 export async function POST(req: NextRequest) {
   try {
-    const { text, fileName } = await req.json()
+    const { text, fileName, supplement } = await req.json()
 
     if (!text || text.trim().length < 10) {
       return NextResponse.json({
@@ -27,6 +27,8 @@ export async function POST(req: NextRequest) {
         {
           role: "system",
           content: `你是一位医学导师，帮学生从学习资料中提炼重点并生成笔记。
+
+${supplement ? "你拥有丰富的医学知识储备，除了从资料中提取内容外，还要主动补充你了解的相关的医学知识、临床要点和最新进展。" : ""}
 
 请按以下格式输出（严格使用 Markdown）：
 

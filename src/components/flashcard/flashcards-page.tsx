@@ -15,7 +15,9 @@ import {
   Star,
   Layers,
   Clock,
+  Filter,
 } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { calculateSRS, ratingToQuality } from "@/lib/srs"
 
 interface FlashcardData {
@@ -93,14 +95,20 @@ export function FlashcardsPage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [flipped, setFlipped] = useState(false)
   const [sessionCards, setSessionCards] = useState<number>(cards.length)
+  const [filterSubject, setFilterSubject] = useState("all")
+
+  const subjects = [...new Set(mockCards.map((c) => c.subject))]
+  const filteredCards = filterSubject === "all"
+    ? cards
+    : cards.filter((c) => c.subject === filterSubject)
   const [已复习Count, set已复习Count] = useState(0)
 
-  const currentCard = cards[currentIndex]
-  const progress = ((currentIndex + 1) / cards.length) * 100
+  const currentCard = filteredCards[currentIndex]
+  const progress = filteredCards.length > 0 ? ((currentIndex + 1) / filteredCards.length) * 100 : 0
 
   const handleRate = useCallback(
     (rating: number) => {
-      if (!currentCard) return
+      if (!currentCard || filteredCards.length === 0) return
 
       // Apply SRS algorithm
       const quality = ratingToQuality(rating as 0 | 1 | 2 | 3)
@@ -160,12 +168,13 @@ export function FlashcardsPage() {
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [flipped, handleFlip, handleRate])
 
-  if (!currentCard) {
+  if (!currentCard || filteredCards.length === 0) {
     return (
       <div className="flex items-center justify-center h-[calc(100vh-12rem)]">
         <div className="text-center">
           <Layers className="h-16 w-16 mx-auto mb-4 text-muted-foreground/30" />
-          <h2 className="text-xl font-semibold mb-2">没有待复习的卡片</h2>
+          <h2 className="text-xl font-semibold mb-2">没有待复习的卡片
+          <p className="text-sm text-muted-foreground">试试切换科目</p></h2>
           <p className="text-muted-foreground">添加一些闪卡开始学习吧！</p>
         </div>
       </div>

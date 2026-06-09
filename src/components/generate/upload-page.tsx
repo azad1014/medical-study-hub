@@ -23,6 +23,8 @@ import {
   AlertCircle,
 } from "lucide-react"
 import { extractFileText, formatFileSize, isSupportedFile } from "@/lib/file-parser"
+import { Switch } from "@/components/ui/switch"
+import { Label } from "@/components/ui/label"
 
 interface FileItem {
   file: File
@@ -41,6 +43,7 @@ export function GeneratePage() {
   const [files, setFiles] = useState<FileItem[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
   const [activeTab, setActiveTab] = useState("notes")
+  const [supplement, setSupplement] = useState(true)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const addFiles = useCallback((newFiles: FileList | File[]) => {
@@ -101,6 +104,7 @@ export function GeneratePage() {
         body: JSON.stringify({
           text: text.slice(0, 15000),
           fileName: item.file.name,
+          supplement,
         }),
       })
 
@@ -182,6 +186,12 @@ export function GeneratePage() {
         <p className="text-sm text-muted-foreground">
           支持 PDF、Word (.docx)、TXT、Markdown
         </p>
+        <div className="flex items-center justify-center gap-2 mt-4">
+          <Switch id="supplement" checked={supplement} onCheckedChange={setSupplement} />
+          <Label htmlFor="supplement" className="text-sm cursor-pointer">
+            AI 补充额外医学知识
+          </Label>
+        </div>
         <input
           ref={fileInputRef}
           type="file"
