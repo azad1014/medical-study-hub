@@ -1,0 +1,269 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String   @id @default(cuid())
+  name          String?
+  email         String   @unique
+  emailVerified DateTime?
+  image         String?
+  passwordHash  String?
+  streakDays    Int      @default(0)
+  lastStudyDate DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  accounts       Account[]
+  sessions       Session[]
+  flashcards     Flashcard[]
+  reviewHistories ReviewHistory[]
+  questionAttempts QuestionAttempt[]
+  mistakes       Mistake[]
+  studySessions  StudySession[]
+  aiChats        AITutorChat[]
+  collections    FlashcardCollection[]
+
+  @@index([email])
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model Subject {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  icon        String?
+  color       String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  topics    Topic[]
+  cards     Flashcard[]
+  questions Question[]
+
+  @@index([order])
+}
+
+model Topic {
+  id        String   @id @default(cuid())
+  name      String
+  content   String?
+  order     Int      @default(0)
+  subjectId String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  subject   Subject      @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+  subtopics Subtopic[]
+  cards     Flashcard[]
+  questions Question[]
+
+  @@index([subjectId, order])
+}
+
+model Subtopic {
+  id        String   @id @default(cuid())
+  name      String
+  content   String?
+  order     Int      @default(0)
+  topicId   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  topic Topic @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  cards Flashcard[]
+
+  @@index([topicId, order])
+}
+
+model FlashcardCollection {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  userId      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user  User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cards Flashcard[]
+
+  @@index([userId])
+}
+
+model Flashcard {
+  id           String   @id @default(cuid())
+  front        String
+  back         String
+  subjectId    String?
+  topicId      String?
+  subtopicId   String?
+  collectionId String?
+  difficulty   Int      @default(3)
+  tags         String[]
+  isFavorite   Boolean  @default(false)
+  userId       String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  // SRS fields (SM-2 algorithm)
+  easeFactor      Float    @default(2.5)
+  interval        Int      @default(0)
+  repetitions     Int      @default(0)
+  nextReviewDate  DateTime @default(now())
+  lastReviewDate  DateTime?
+
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject         Subject?          @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  topic           Topic?            @relation(fields: [topicId], references: [id], onDelete: SetNull)
+  subtopic        Subtopic?         @relation(fields: [subtopicId], references: [id], onDelete: SetNull)
+  collection      FlashcardCollection? @relation(fields: [collectionId], references: [id], onDelete: SetNull)
+  reviewHistories ReviewHistory[]
+
+  @@index([userId, nextReviewDate])
+  @@index([userId, subjectId])
+  @@index([userId, isFavorite])
+}
+
+model ReviewHistory {
+  id          String   @id @default(cuid())
+  cardId      String
+  userId      String
+  rating      Int      // 0=Again, 1=Hard, 2=Good, 3=Easy
+  reviewedAt  DateTime @default(now())
+  interval    Int      // days until next review
+  easeFactor  Float    // updated ease factor
+
+  card Flashcard @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  user User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([cardId, reviewedAt])
+  @@index([userId, reviewedAt])
+}
+
+enum QuestionType {
+  SINGLE_CHOICE
+  MULTIPLE_CHOICE
+  TRUE_FALSE
+  CASE_ANALYSIS
+}
+
+model Question {
+  id            String       @id @default(cuid())
+  stem          String
+  options       String[]     // JSON array of option strings
+  correctAnswer String[]     // Array for multiple correct answers
+  explanation   String
+  questionType  QuestionType @default(SINGLE_CHOICE)
+  difficulty    Int          @default(3)
+  tags          String[]
+  subjectId     String?
+  topicId       String?
+  isFavorite    Boolean      @default(false)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  attempts        QuestionAttempt[]
+  relatedMistakes Mistake[]
+
+  subject Subject? @relation(fields: [subjectId], references: [id], onDelete: SetNull)
+  topic   Topic?   @relation(fields: [topicId], references: [id], onDelete: SetNull)
+
+  @@index([subjectId])
+  @@index([difficulty])
+  @@index([questionType])
+}
+
+model QuestionAttempt {
+  id         String   @id @default(cuid())
+  questionId String
+  userId     String
+  answer     String[]
+  isCorrect  Boolean
+  timeSpent  Int?     // seconds
+  attemptedAt DateTime @default(now())
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([questionId, userId])
+  @@index([userId, attemptedAt])
+}
+
+model Mistake {
+  id         String   @id @default(cuid())
+  questionId String
+  userId     String
+  count      Int      @default(1)
+  lastMistakeAt DateTime @default(now())
+  createdAt  DateTime @default(now())
+
+  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([questionId, userId])
+  @@index([userId, count])
+  @@index([userId, lastMistakeAt])
+}
+
+model StudySession {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String   // "flashcard" | "quiz" | "review"
+  duration  Int      // seconds
+  cardsStudied Int  @default(0)
+  correctCount Int  @default(0)
+  startedAt DateTime @default(now())
+  endedAt   DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, startedAt])
+}
+
+model AITutorChat {
+  id        String   @id @default(cuid())
+  userId    String
+  title     String?
+  messages  Json     @default("[]") // Array of {role, content, timestamp}
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, updatedAt])
+}
