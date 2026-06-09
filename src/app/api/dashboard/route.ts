@@ -1,5 +1,8 @@
-import { NextResponse } from "next/server"
+﻿import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
+export const dynamic = 'force-dynamic'
+
+// Prevent static generation on Vercel
 
 export async function GET() {
   try {

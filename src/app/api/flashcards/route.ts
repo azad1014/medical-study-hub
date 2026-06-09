@@ -1,6 +1,7 @@
-import { NextRequest, NextResponse } from "next/server"
+﻿import { NextRequest, NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { calculateSRS, ratingToQuality } from "@/lib/srs"
+export const dynamic = 'force-dynamic'
 
 export async function GET() {
   try {
