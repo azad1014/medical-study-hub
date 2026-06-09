@@ -31,7 +31,7 @@ export default function LoginPage() {
               <GraduationCap className="h-7 w-7 text-white" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold">Medical Study Hub</h1>
+          <h1 className="text-2xl font-bold">医学学习中心</h1>
           <p className="text-muted-foreground text-sm">
             Sign in to your account to continue
           </p>

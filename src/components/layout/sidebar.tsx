@@ -10,6 +10,7 @@ import {
   FileQuestion,
   AlertTriangle,
   Bot,
+  Sparkles,
   LogOut,
   ChevronLeft,
   ChevronRight,

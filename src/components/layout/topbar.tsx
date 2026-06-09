@@ -62,7 +62,7 @@ export function TopBar() {
           <DropdownMenuContent align="end">
             <DropdownMenuItem>个人资料</DropdownMenuItem>
             <DropdownMenuItem>设置</DropdownMenuItem>
-            <DropdownMenuItem>Sign Out</DropdownMenuItem>
+            <DropdownMenuItem>退出登录</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
