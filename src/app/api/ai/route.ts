@@ -1,8 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 import OpenAI from "openai"
 
+// Use OPENAI_BASE_URL env var, default to DeepSeek API
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY || "",
+  baseURL: process.env.OPENAI_BASE_URL || "https://api.deepseek.com/v1",
 })
 
 export async function POST(req: NextRequest) {
@@ -16,7 +18,7 @@ export async function POST(req: NextRequest) {
     }
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-4",
+      model: process.env.OPENAI_MODEL || "deepseek-chat",
       messages: [
         {
           role: "system",
