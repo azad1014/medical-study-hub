@@ -19,7 +19,7 @@ export async function GET() {
           },
         },
       },
-      orderBy: { count: "desc" },
+      orderBy: { totalWrong: "desc" },
     })
 
     return NextResponse.json(mistakes)
@@ -39,3 +39,5 @@ export async function DELETE() {
     return NextResponse.json({ error: "Failed to clear mistakes" }, { status: 500 })
   }
 }
+
+

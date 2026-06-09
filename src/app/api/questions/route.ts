@@ -59,13 +59,13 @@ export async function POST(req: NextRequest) {
           questionId_userId: { questionId, userId },
         },
         update: {
-          count: { increment: 1 },
+          totalWrong: { increment: 1 },
           lastMistakeAt: new Date(),
         },
         create: {
           questionId,
           userId,
-          count: 1,
+          totalWrong: 1,
           lastMistakeAt: new Date(),
         },
       })
@@ -76,3 +76,4 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Failed to submit answer" }, { status: 500 })
   }
 }
+
