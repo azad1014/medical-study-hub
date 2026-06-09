@@ -66,16 +66,38 @@ export function AITutorPage() {
     setInput("")
     setIsLoading(true)
 
-    // Simulate AI response (would call OpenAI API in production)
-    setTimeout(() => {
+    try {
+      const res = await fetch("/api/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: [...messages, userMessage].map((m) => ({
+            role: m.role,
+            content: m.content,
+          })),
+        }),
+      })
+
+      const data = await res.json()
+      const aiContent = data.response || "没有收到回复，请重试"
+
+      const aiResponse: Message = {
+        role: "assistant",
+        content: aiContent,
+        timestamp: new Date(),
+      }
+      setMessages((prev) => [...prev, aiResponse])
+    } catch {
+      // Fallback to mock response if API fails
       const aiResponse: Message = {
         role: "assistant",
         content: generateMockResponse(userMessage.content),
         timestamp: new Date(),
       }
       setMessages((prev) => [...prev, aiResponse])
+    } finally {
       setIsLoading(false)
-    }, 1500)
+    }
   }
 
   const handleSuggestion = (prompt: string) => {
