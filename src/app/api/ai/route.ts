@@ -22,12 +22,12 @@ export async function POST(req: NextRequest) {
       messages: [
         {
           role: "system",
-          content: "You are a medical education tutor helping medical students prepare for exams. Provide clear, structured explanations. Use markdown formatting. Focus on high-yield concepts and clinical correlations.",
+          content: "你是一位资深的医学导师，帮助医学生理解医学知识。\n\n请遵循以下原则：\n- 用中文回答，表达自然、清晰、有深度\n- 可以使用 Markdown 格式（标题、列表、表格等）来组织内容\n- 可以展开讨论机制、病因、临床表现、诊断和治疗\n- 根据问题灵活调整回答风格，可详细可简洁\n- 遇到需要对比的概念，使用表格对比\n- 涉及机制时，分步骤解释\n- 可以举临床实例帮助理解\n- 像真正的老师在给学生答疑一样自然",
         },
         ...messages,
       ],
       temperature: 0.7,
-      max_tokens: 1000,
+      max_tokens: 2000,
     })
 
     return NextResponse.json({
