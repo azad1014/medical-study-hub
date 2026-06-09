@@ -1,5 +1,5 @@
-﻿import { GeneratePage } from "@/components/generate/upload-page"
+import { GeneratePage } from "@/components/generate/upload-page"
 
 export default function Generate() {
   return <GeneratePage />
-}
+}

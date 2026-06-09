@@ -1,0 +1,24 @@
+{
+  "nav": {
+    "dashboard": "工作台",
+    "knowledge": "知识库",
+    "flashcards": "闪卡",
+    "quiz": "题库",
+    "mistakes": "错题本",
+    "generate": "资料生成",
+    "aiTutor": "AI 导师"
+  },
+  "dashboard": {
+    "dueCards": "复习 {count} 张卡片",
+    "dueQuestions": "完成 {count} 道题目",
+    "streak": "连续学习 {count} 天",
+    "mastered": "已掌握 {count} 张卡片"
+  },
+  "flashcard": {
+    "again": "重来",
+    "hard": "困难",
+    "good": "良好",
+    "easy": "简单",
+    "reviewed": "{count} 已复习"
+  }
+}

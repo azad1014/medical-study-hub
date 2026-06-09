@@ -70,12 +70,13 @@ export function AITutorPage() {
       const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [...messages, userMessage].map((m) => ({
-            role: m.role,
-            content: m.content,
-          })),
-        }),
+        body: (() => {
+          const ctx = [...messages, userMessage]
+            .filter((m) => m.role !== "system")
+            .slice(-10)
+            .map((m) => ({ role: m.role, content: m.content }))
+          return JSON.stringify({ messages: ctx })
+        })(),
       })
 
       const data = await res.json()

@@ -1,0 +1,24 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "knowledge": "Knowledge Base",
+    "flashcards": "Flashcards",
+    "quiz": "Quiz",
+    "mistakes": "Mistakes",
+    "generate": "Generate",
+    "aiTutor": "AI Tutor"
+  },
+  "dashboard": {
+    "dueCards": "Review {count} cards",
+    "dueQuestions": "Complete {count} questions",
+    "streak": "{count}-day streak",
+    "mastered": "{count} cards mastered"
+  },
+  "flashcard": {
+    "again": "Again",
+    "hard": "Hard",
+    "good": "Good",
+    "easy": "Easy",
+    "reviewed": "{count} reviewed"
+  }
+}

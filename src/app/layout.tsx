@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import "./globals.css"
 import { Providers } from "@/components/providers"
-import { Sidebar } from "@/components/layout/sidebar"
+import { NavDock } from "@/components/layout/nav-dock"
 import { TopBar } from "@/components/layout/topbar"
 
 export const metadata: Metadata = {
@@ -18,11 +18,11 @@ export default function RootLayout({
   <html lang="en" suppressHydrationWarning>
       <body className="font-sans">
         <Providers>
-          <div className="flex h-screen overflow-hidden">
-            <Sidebar />
-            <div className="flex flex-1 flex-col overflow-hidden">
+          <div className="flex h-screen overflow-hidden bg-background">
+            <NavDock />
+            <div className="flex flex-1 flex-col overflow-hidden max-w-5xl mx-auto w-full">
               <TopBar />
-              <main className="flex-1 overflow-y-auto bg-background p-6">
+              <main className="flex-1 overflow-y-auto px-6 py-8 md:px-10 lg:px-12">
                 {children}
               </main>
             </div>

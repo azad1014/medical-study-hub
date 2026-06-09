@@ -1,4 +1,4 @@
-﻿import { PrismaClient } from "@prisma/client"
+import { PrismaClient } from "@prisma/client"
 
 /**
  * Prisma 客户端单例
@@ -29,4 +29,4 @@ if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma
  */
 export function getPrisma(): PrismaClient {
   return prisma
-}
+}
