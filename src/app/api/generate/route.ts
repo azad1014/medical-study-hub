@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server"
+﻿import { NextRequest, NextResponse } from "next/server"
 import OpenAI from "openai"
 
 export const dynamic = 'force-dynamic'
@@ -82,3 +82,4 @@ A. 选项1 B. 选项2 C. 选项3 D. 选项4
     })
   }
 }
+
