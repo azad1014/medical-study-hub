@@ -1,6 +1,6 @@
 ﻿"use client"
 
-import { useState, useCallback, useRef } from "react"
+import { useState, useCallback, useRef, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -23,6 +23,24 @@ import {
   AlertCircle,
 } from "lucide-react"
 import { extractFileText, formatFileSize, isSupportedFile } from "@/lib/file-parser"
+const STORAGE_KEY = "medical-study-generate-history"
+interface HistoryItem {
+  id: string
+  fileName: string
+  timestamp: string
+  summary: string
+  result: { full: string; notes: string; cards: string; quiz: string }
+}
+function loadHistory(): HistoryItem[] {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]") }
+  catch { return [] }
+}
+function saveToHistory(item: HistoryItem) {
+  const history = loadHistory()
+  history.unshift(item)
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(history.slice(0, 50)))
+}
+
 import { Switch } from "@/components/ui/switch"
 import { Label } from "@/components/ui/label"
 
@@ -44,7 +62,10 @@ export function GeneratePage() {
   const [isDragOver, setIsDragOver] = useState(false)
   const [activeTab, setActiveTab] = useState("notes")
   const [supplement, setSupplement] = useState(true)
+  const [history, setHistory] = useState<HistoryItem[]>([])
+  const [showHistory, setShowHistory] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  useEffect(() => { setHistory(loadHistory()) }, [])
 
   const addFiles = useCallback((newFiles: FileList | File[]) => {
     const items: FileItem[] = Array.from(newFiles)
@@ -126,6 +147,15 @@ export function GeneratePage() {
         next[index].result = data
         return next
       })
+      const summary = data.notes ? data.notes.slice(0, 80) + "..." : "无笔记内容"
+      saveToHistory({
+        id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6),
+        fileName: item.file.name,
+        timestamp: new Date().toLocaleString("zh-CN"),
+        summary,
+        result: data,
+      })
+      setHistory(loadHistory())
     } catch (err) {
       setFiles((prev) => {
         const next = [...prev]
@@ -417,6 +447,43 @@ export function GeneratePage() {
           </CardContent>
         </Card>
       )}
+
+      {/* History section */}
+      {history.length > 0 && (
+        <section className="space-y-3 mt-6">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-medium text-muted-foreground">
+              历史记录 ({history.length})
+            </h2>
+            <button
+              onClick={() => { localStorage.removeItem(STORAGE_KEY); setHistory([]) }}
+              className="text-xs text-muted-foreground hover:text-red-500 transition-colors"
+            >
+              清空全部
+            </button>
+          </div>
+          <div className="space-y-2">
+            {history.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => {
+                  const fakeFile = ({ name: item.fileName } as File)
+                  const fakeItem: FileItem = { file: fakeFile, text: "", status: "done", result: item.result }
+                  setFiles([fakeItem])
+                }}
+                className="w-full text-left p-3 rounded-lg border hover:bg-muted/50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium truncate">{item.fileName}</span>
+                  <span className="text-xs text-muted-foreground shrink-0 ml-2">{item.timestamp}</span>
+                </div>
+                <p className="text-xs text-muted-foreground mt-1 truncate">{item.summary}</p>
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
     </div>
   )
 }
