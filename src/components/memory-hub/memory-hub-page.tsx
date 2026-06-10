@@ -23,7 +23,7 @@ function loadHistory(): HistoryItem[] {
 }
 
 function cleanMd(text: string): string {
-    .trim()
+  return text.trim()
 }
 
 export function MemoryHubPage() {
@@ -35,10 +35,8 @@ export function MemoryHubPage() {
 
   const item = selected
   const notes = item ? cleanMd(item.result.notes) : ""
-  const cardLines = item ? item.result.cards.split("
-").filter(Boolean) : []
-  const quizLines = item ? item.result.quiz.split("
-").filter(Boolean) : []
+  const cardLines = item ? item.result.cards.split("\n").filter(Boolean) : []
+  const quizLines = item ? item.result.quiz.split("\n").filter(Boolean) : []
 
   return (
     <div className="flex h-[calc(100vh-8rem)] gap-4">
