@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
@@ -33,7 +33,7 @@ export function NavDock() {
   const pathname = usePathname()
 
   return (
-    <aside className="flex flex-col items-center w-12 border-r bg-card py-3 gap-1 shrink-0">
+    <aside className="hidden md:flex flex-col items-center w-12 border-r bg-card py-3 gap-1 shrink-0">
       {/* Mini logo */}
       <div className="h-8 w-8 rounded-lg bg-medical-500 flex items-center justify-center mb-2">
         <span className="text-white font-bold text-xs">MS</span>
@@ -84,3 +84,4 @@ export function NavDock() {
     </aside>
   )
 }
+
