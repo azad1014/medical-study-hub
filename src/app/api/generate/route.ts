@@ -3,23 +3,23 @@ import OpenAI from "openai"
 
 export const dynamic = 'force-dynamic'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "",
-  baseURL: process.env.OPENAI_BASE_URL || "https://api.deepseek.com/v1",
-})
-
 export async function POST(req: NextRequest) {
   try {
     const { text, fileName, supplement } = await req.json()
 
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY || "",
+      baseURL: process.env.OPENAI_BASE_URL || "https://api.deepseek.com/v1",
+    })
+
     if (!text || text.trim().length < 10) {
       return NextResponse.json({
-        error: "提取到的文字内容太少，请确认文件可以正常读取。",
+        error: "提取到的文字内容太少，或处理超时。请尝试上传较短的章节而非整本书。",
       })
     }
 
     // Truncate very long texts
-    const truncated = text.slice(0, 15000)
+    const truncated = text.slice(0, 8000)
 
     const completion = await openai.chat.completions.create({
       model: process.env.OPENAI_MODEL || "deepseek-chat",
