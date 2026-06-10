@@ -21,6 +21,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 const navItems = [
   { href: "/", label: "工作台", icon: LayoutDashboard },
+  { href: "/memory-hub", label: "记忆中心", icon: Brain },
   { href: "/knowledge-base", label: "知识库", icon: BookOpen },
   { href: "/flashcards", label: "闪卡", icon: GraduationCap },
   { href: "/questions", label: "题库", icon: FileQuestion },
@@ -83,5 +84,6 @@ export function NavDock() {
       </Tooltip>
     </aside>
   )
-}
+}
+
 
