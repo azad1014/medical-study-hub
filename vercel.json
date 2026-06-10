@@ -1,6 +1,1 @@
-{
-  "buildCommand": "npx prisma generate && npx next build",
-  "installCommand": "npm install",
-  "framework": "nextjs",
-  "nodeVersion": "20.x"
-}
+{ "buildCommand": "npx prisma generate && npx next build", "framework": "nextjs" }
