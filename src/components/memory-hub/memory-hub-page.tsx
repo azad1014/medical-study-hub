@@ -23,13 +23,7 @@ function loadHistory(): HistoryItem[] {
 }
 
 function cleanMd(text: string): string {
-  return text
-    .replace(/#/g, "").replace(/\*/g, "")
-    .replace(/-{3,}/g, "").replace(/>/g, "")
-    .replace(/
-{3,}/g, "
-
-").trim()
+    .trim()
 }
 
 export function MemoryHubPage() {
